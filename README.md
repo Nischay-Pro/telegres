@@ -53,6 +53,12 @@ persistence = PostgresPersistence(postgres_database="test", postgres_username="a
 persistence = PostgresPersistence(postgres_url="postgres://admin:test@localhost:5432/test", postgres_schema="telegres", postgres_timestamp=True)
 ```
 
+You can then include the persistence object by adding it to the ApplicationBuilder class and calling the `persistence` method:
+
+```python
+application = Application.builder().token("<your token here>").persistence(persistence).build()
+```
+
 You can either use the URL or the connection parameters.
 
 - `postgres_database`: The name of the database. Defaults to `telegres`.
