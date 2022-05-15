@@ -289,7 +289,7 @@ class PostgresPersistence(BasePersistence[UD, CD, BD]):
         if self.postgres_timestamp:
             sql_command = (
                 "CREATE TABLE IF NOT EXISTS {0}.telegram_{1} "
-                "(id SERIAL NOT NULL PRIMARY KEY, data jsonb NOT NULL, "
+                "(id BIGINT NOT NULL PRIMARY KEY, data jsonb NOT NULL, "
                 "created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(), "
                 "updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW());".format(
                     self.postgres_schema, table
@@ -298,7 +298,7 @@ class PostgresPersistence(BasePersistence[UD, CD, BD]):
         else:
             sql_command = (
                 "CREATE TABLE IF NOT EXISTS {0}.telegram_{1} "
-                "(id SERIAL NOT NULL PRIMARY KEY, data jsonb NOT NULL);".format(
+                "(id BIGINT NOT NULL PRIMARY KEY, data jsonb NOT NULL);".format(
                     self.postgres_schema, table
                 )
             )

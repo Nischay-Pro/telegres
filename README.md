@@ -71,3 +71,18 @@ You can either use the URL or the connection parameters.
 - `postgres_timestamp`: Whether to use timestamp or not. Defaults to `True`.
 
 `postgres_schema` is useful in case you want to store multiple bot data in the same database.
+
+## Migration
+
+We have provided a migration tool for the library. You can use it to migrate your data from pickle persistence to PostgreSQL persistence.
+
+```bash
+git clone https://github.com/Nischay-Pro/telegres.git
+cd telegres/tools
+python3 migrate.py -c <config file> -p <pickle file>
+```
+
+A sample config file is provided in the `tools` directory. Update the database parameters accordingly. The pickle file is the file that you have created using the pickle persistence. Run the tool and it will automatically create the necessary tables and populate it with the data.
+
+### Note
+The `skip_null` parameter will instruct the tool to ignore empty fields. This is useful when you have a lot of empty fields in your data.
