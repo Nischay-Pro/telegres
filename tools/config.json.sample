@@ -6,7 +6,7 @@
         "username": "postgres",
         "password": "postgres",
         "database": "postgres",
-        "schema": "public",
+        "schema": "telegres",
         "skip_null": true
     }
 }

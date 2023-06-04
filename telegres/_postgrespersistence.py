@@ -332,6 +332,7 @@ class PostgresPersistence(BasePersistence[UD, CD, BD]):
         try:
             if self.postgres_connection:
                 for unique_id in data.keys():
+                    data_dump = json.dumps(data[unique_id])
                     if not self._check_key_in_table(table, unique_id):
                         sql_command = (
                             "INSERT INTO {0}.telegram_{1} (id, data) VALUES (%s, %s);".format(
@@ -339,7 +340,7 @@ class PostgresPersistence(BasePersistence[UD, CD, BD]):
                             )
                         )
                         self.postgres_cursor.execute(
-                            sql_command, (unique_id, json.dumps(data[unique_id]))
+                            sql_command, (unique_id, data_dump)
                         )
                     else:
                         sql_command = (
@@ -348,7 +349,7 @@ class PostgresPersistence(BasePersistence[UD, CD, BD]):
                             )
                         )
                         self.postgres_cursor.execute(
-                            sql_command, (json.dumps(data[unique_id]), unique_id)
+                            sql_command, (data_dump, unique_id)
                         )
                 self.postgres_connection.commit()
         except psycopg.OperationalError as exc:
@@ -361,7 +362,8 @@ class PostgresPersistence(BasePersistence[UD, CD, BD]):
         if self.chat_data:
             self._dump_table_to_db("chat", self.chat_data)
         if self.bot_data:
-            self._dump_table_to_db("bot", self.bot_data)
+            data = {1: self.bot_data}
+            self._dump_table_to_db("bot", data)
         if self.callback_data:
             data = {1: self.callback_data}
             self._dump_table_to_db("callback", data)
@@ -471,6 +473,8 @@ class PostgresPersistence(BasePersistence[UD, CD, BD]):
             self.bot_data = self._load_table_from_db("bot")
             if not self.bot_data:
                 self.bot_data = self.context_types.bot_data()
+            else:
+                self.bot_data = self.bot_data[1]
         return deepcopy(self.bot_data)  # type: ignore[return-value]
 
     async def get_callback_data(self) -> Optional[CDCData]:
@@ -573,7 +577,8 @@ class PostgresPersistence(BasePersistence[UD, CD, BD]):
             return
         self.bot_data = data
         if not self.on_flush:
-            self._dump_table_to_db("bot", self.bot_data)
+            data = {1: self.bot_data}
+            self._dump_table_to_db("bot", data)
 
     async def update_callback_data(self, data: CDCData) -> None:
         """Will update the callback_data (if changed) and depending on :attr:`on_flush` dump to 

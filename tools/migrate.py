@@ -3,7 +3,6 @@ import os
 import psycopg
 import pickle
 import json
-import jinja2
 
 def main():
     parser = argparse.ArgumentParser(description='Migrate pickle persistence to postgreSQL.')
@@ -116,7 +115,7 @@ def main():
                 )
                 if skip_null and len(pickle_data[bot_key][entry]) == 0:
                     continue
-                cur.execute(sql_command, (entry, json.dumps(pickle_data[bot_key][entry]),))
+                cur.execute(sql_command, (entry, json.dumps(pickle_data[bot_key][entry])))
             print('[+] Migrated {0}.'.format(table_name))
     
     print('[+] Committing changes.')
